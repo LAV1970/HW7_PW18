@@ -1,36 +1,33 @@
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Date, Table
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String, Date, ForeignKey, Table, MetaData
+from sqlalchemy.orm import relationship, declarative_base
+from sqlalchemy import create_engine
 
-# Создание подключения к базе данных
-engine = create_engine(
-    "sqlite:///F:/Projects/Python_projects/Alex/HW7_PW18/uni_hw7.db", echo=True
-)
-
-from sqlalchemy.orm import declarative_base
-
+# Определение переменной Base перед использованием
 Base = declarative_base()
 
-# Определение моделей
+DATABASE_URL = "sqlite:///F:/Projects/Python_projects/Alex/HW7_PW18/uni_hw7.db"
+engine = create_engine(DATABASE_URL)
+
+# Создание таблиц в базе данных
+Base.metadata.create_all(engine)
 
 
 class Student(Base):
     __tablename__ = "student"
-
     student_id = Column(Integer, primary_key=True)
     name = Column(String(50))
     age = Column(Integer)
     group_id = Column(Integer, ForeignKey("groupps.group_id"))
+    group = relationship("Group", back_populates="students")
 
 
 class Group(Base):
     __tablename__ = "groupps"
-
     group_id = Column(Integer, primary_key=True)
     name_group = Column(String(255))
     fach = Column(Integer)
     subject = Column(String(50))
-    students = relationship("Student", backref="group")
+    students = relationship("Student", back_populates="group")
 
 
 class Professor(Base):
@@ -50,9 +47,11 @@ class Subject(Base):
     professors = relationship("Professor", secondary="professor_subject")
 
 
+metadata = MetaData()
+
 professor_subject = Table(
     "professor_subject",
-    Base.metadata,
+    metadata,
     Column("professor_id", Integer, ForeignKey("professor.professor_id")),
     Column("subject_id", Integer, ForeignKey("subject.subject_id")),
 )
@@ -67,7 +66,3 @@ class Grade(Base):
     student = Column(String(20))
     data = Column(Date)
     subject_id = Column(Integer, ForeignKey("subject.subject_id"))
-
-
-# Создание таблиц в базе данных
-Base.metadata.create_all(engine)
