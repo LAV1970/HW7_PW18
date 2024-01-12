@@ -6,9 +6,11 @@ Base = declarative_base()
 
 
 class Student(Base):
-    __tablename__ = "student"
-    student_id = Column(Integer, primary_key=True)
-    name = Column(String(50))
-    age = Column(Integer)
-    group_id = Column(Integer, ForeignKey("groupps.group_id"))
+    __tablename__ = "students"
+
+    student_id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String, nullable=False)
+    age = Column(Integer, nullable=False)
+    group_id = Column(Integer, ForeignKey("groups.group_id"), nullable=False)
+
     group = relationship("Group", back_populates="students")

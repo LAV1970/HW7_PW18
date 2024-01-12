@@ -12,22 +12,26 @@ engine = create_engine(DATABASE_URL)
 Base.metadata.create_all(engine)
 
 
-class Student(Base):
-    __tablename__ = "student"
-    student_id = Column(Integer, primary_key=True)
-    name = Column(String(50))
-    age = Column(Integer)
-    group_id = Column(Integer, ForeignKey("groupps.group_id"))
-    group = relationship("Group", back_populates="students")
-
-
 class Group(Base):
-    __tablename__ = "groupps"
-    group_id = Column(Integer, primary_key=True)
-    name_group = Column(String(255))
-    fach = Column(Integer)
-    subject = Column(String(50))
+    __tablename__ = "groups"
+
+    group_id = Column(Integer, primary_key=True, autoincrement=True)
+    name_group = Column(String, nullable=False)
+    fach = Column(Integer, nullable=False)
+    subject = Column(String, nullable=False)
+
     students = relationship("Student", back_populates="group")
+
+
+class Student(Base):
+    __tablename__ = "students"
+
+    student_id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String, nullable=False)
+    age = Column(Integer, nullable=False)
+    group_id = Column(Integer, ForeignKey("groups.group_id"), nullable=False)
+
+    group = relationship("Group", back_populates="students")
 
 
 class Professor(Base):
@@ -49,12 +53,16 @@ class Subject(Base):
 
 metadata = MetaData()
 
-professor_subject = Table(
-    "professor_subject",
-    metadata,
-    Column("professor_id", Integer, ForeignKey("professor.professor_id")),
-    Column("subject_id", Integer, ForeignKey("subject.subject_id")),
-)
+
+class ProfessorSubject(Base):
+    __tablename__ = "professor_subject"
+    professor_id = Column(
+        Integer, ForeignKey("professor.professor_id"), primary_key=True
+    )
+    subject_id = Column(Integer, ForeignKey("subject.subject_id"), primary_key=True)
+
+    professor = relationship("Professor", back_populates="subjects")
+    subject = relationship("Subject", back_populates="professors")
 
 
 class Grade(Base):

@@ -4,6 +4,9 @@ from pathlib import Path
 # Добавьте путь к родительской директории вашего проекта
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
+# Затем добавьте импорты классов из модуля models
+from models import Student, Group, Professor, Subject, ProfessorSubject, Grade
+
 from sqlalchemy.orm import Session
 from faker import Faker
 from models import Student, Group, Professor, Subject, ProfessorSubject, Grade
