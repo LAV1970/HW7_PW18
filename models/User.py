@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-from models import Base
+from .models import Base  # Adjust the import path
 
 
 class Student(Base):

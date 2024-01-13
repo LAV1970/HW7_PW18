@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, ForeignKey
 from sqlalchemy.orm import relationship
-from models import Base
+from .models import Base
 
 
 class ProfessorSubject(Base):

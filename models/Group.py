@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
-from models import Base  # Импортируйте Base напрямую из models.__init__
+from .models import Base  # Импортируйте Base напрямую из models.__init__
 
 
 class Group(Base):

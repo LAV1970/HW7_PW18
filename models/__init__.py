@@ -1,4 +1,4 @@
-from .Student import Student
+from .User import Student
 from .Group import Group
 from .Professor import Professor
 from .Subject import Subject
