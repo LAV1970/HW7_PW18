@@ -1,4 +1,5 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy.orm import relationship
 from models import Base
 
 
@@ -10,5 +11,5 @@ class Student(Base):
     age = Column(Integer)
     group_id = Column(Integer, ForeignKey("groups.group_id"))
 
-    # Добавьте это отношение
     group = relationship("Group", back_populates="students")
+    grades = relationship("Grade", back_populates="student")

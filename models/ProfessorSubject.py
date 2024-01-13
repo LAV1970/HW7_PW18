@@ -1,13 +1,14 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, ForeignKey
+from sqlalchemy.orm import relationship
 from models import Base
 
 
 class ProfessorSubject(Base):
-    __tablename__ = "professor_subject"
-    professor_id = Column(
-        Integer, ForeignKey("professor.professor_id"), primary_key=True
-    )
-    subject_id = Column(Integer, ForeignKey("subject.subject_id"), primary_key=True)
+    __tablename__ = "professor_subjects"
 
-    professor = relationship("Professor", back_populates="subjects")
-    subject = relationship("Subject", back_populates="professors")
+    professor_subject_id = Column(Integer, primary_key=True, index=True)
+    professor_id = Column(Integer, ForeignKey("professors.professor_id"))
+    subject_id = Column(Integer, ForeignKey("subjects.subject_id"))
+
+    professor = relationship("Professor", back_populates="professor_subjects")
+    subject = relationship("Subject", back_populates="professor_subjects")

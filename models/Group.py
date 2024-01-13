@@ -1,5 +1,6 @@
 from sqlalchemy import Column, Integer, String
-from models import Base
+from sqlalchemy.orm import relationship
+from models import Base  # Импортируйте Base напрямую из models.__init__
 
 
 class Group(Base):
@@ -10,5 +11,4 @@ class Group(Base):
     fach = Column(Integer)
     subject = Column(String)
 
-    # Добавьте это отношение
     students = relationship("Student", back_populates="group")
