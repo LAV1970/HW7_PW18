@@ -1,36 +1,40 @@
-import sqlite3
+from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
 from faker import Faker
 import random
+from models import Student, Group, Professor, ProfessorSubject, Grade
+from datetime import date
 
-# Подключение к базе данных
-connection = sqlite3.connect("F:/Projects/Python_projects/Alex/HW7_PW18/uni_hw7.db")
-cursor = connection.cursor()
+# Замените 'sqlite:///F:/Projects/Python_projects/Alex/HW7_PW18/uni_hw7.db' на ваше соединение с базой данных
+engine = create_engine("sqlite:///F:/Projects/Python_projects/Alex/HW7_PW18/uni_hw7.db")
+
+# Создаем сессию
+Session = sessionmaker(bind=engine)
+session = Session()
 
 # Создание объекта Faker
 fake = Faker()
 
 
-# Функция для добавления случайного студента
-def add_random_student():
+# Функция для добавления случайного студента с использованием SQLAlchemy
+def add_random_student_to_db():
     name = fake.name()
     age = random.randint(18, 25)
-    group_id = random.randint(
-        1, 10
-    )  # Предполагается, что у вас есть 10 групп с group_id от 1 до 10
+    group_id = random.randint(1, 10)
 
-    cursor.execute(
-        """
-        INSERT INTO student (name, age, group_id)
-        VALUES (?, ?, ?)
-        """,
-        (name, age, group_id),
-    )
+    # Создаем объект Student
+    student = Student(name=name, age=age, group_id=group_id)
+
+    # Добавляем студента в сессию
+    session.add(student)
 
 
-# Добавление 40 случайных студентов
+# Добавление 40 случайных студентов в базу данных
 for _ in range(40):
-    add_random_student()
+    add_random_student_to_db()
 
-# Сохранение изменений и закрытие соединения
-connection.commit()
-connection.close()
+# Сохраняем изменения в базе данных
+session.commit()
+
+# Закрываем сессию
+session.close()
