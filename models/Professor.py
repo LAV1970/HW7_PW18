@@ -10,3 +10,6 @@ class Professor(Base):
     name = Column(String(20))
     degree = Column(String(50))
     subjects = relationship("Subject", secondary="professor_subject")
+
+
+Professor.__table_args__ = {"extend_existing": True}

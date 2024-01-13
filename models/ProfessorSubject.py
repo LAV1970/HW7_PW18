@@ -12,3 +12,6 @@ class ProfessorSubject(Base):
 
     professor = relationship("Professor", back_populates="professor_subjects")
     subject = relationship("Subject", back_populates="professor_subjects")
+
+
+ProfessorSubject.__table_args__ = {"extend_existing": True}

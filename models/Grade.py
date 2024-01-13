@@ -14,3 +14,6 @@ class Grade(Base):
     subject_id = Column(Integer, ForeignKey("subjects.subject_id"))
 
     subject = relationship("Subject", back_populates="grades")
+
+
+Grade.__table_args__ = {"extend_existing": True}

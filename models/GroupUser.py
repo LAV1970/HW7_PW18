@@ -12,3 +12,6 @@ class Group(Base):
     subject = Column(String)
 
     students = relationship("Student", back_populates="group")
+
+
+Group.__table_args__ = {"extend_existing": True}

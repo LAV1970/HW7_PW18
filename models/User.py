@@ -5,6 +5,7 @@ from .models import Base  # Adjust the import path
 
 class Student(Base):
     __tablename__ = "students"
+    __table_args__ = {"extend_existing": True}  # Add this line
 
     student_id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
