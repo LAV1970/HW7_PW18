@@ -1,13 +1,8 @@
 from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Date
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.orm import sessionmaker, relationship
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
-from sqlalchemy.orm import declarative_base
 
 Base = declarative_base()
-
-# Замените 'sqlite:///F:/Projects/Python_projects/Alex/HW7_PW18/uni_hw7.db' на ваше соединение с базой данных
-engine = create_engine("sqlite:///F:/Projects/Python_projects/Alex/HW7_PW18/uni_hw7.db")
 
 
 class Group(Base):
@@ -63,3 +58,7 @@ class Grade(Base):
     subject_id = Column(Integer, ForeignKey("groupps.group_id"))
 
     subject = relationship("Group")
+
+
+engine = create_engine("sqlite:///F:/Projects/Python_projects/Alex/HW7_PW18/uni_hw7.db")
+Base.metadata.create_all(engine)
