@@ -22,6 +22,14 @@ engine = create_engine(DATABASE_URL)
 # Создание сессии SQLAlchemy
 session = Session(engine)
 
+# Импорт Base из SQLAlchemy
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
+
+# Создание таблиц в базе данных
+Base.metadata.create_all(bind=engine)
+
 
 # Создание функций для генерации данных
 def create_students(num_students, groups):

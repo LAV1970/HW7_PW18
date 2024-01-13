@@ -1,16 +1,14 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Date
-from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
+from sqlalchemy import Column, Integer, String
+from models import Base
 
 
 class Student(Base):
     __tablename__ = "students"
 
-    student_id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String, nullable=False)
-    age = Column(Integer, nullable=False)
-    group_id = Column(Integer, ForeignKey("groups.group_id"), nullable=False)
+    student_id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, index=True)
+    age = Column(Integer)
+    group_id = Column(Integer, ForeignKey("groups.group_id"))
 
+    # Добавьте это отношение
     group = relationship("Group", back_populates="students")
