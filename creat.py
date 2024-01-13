@@ -1,37 +1,35 @@
-from sqlalchemy import Column, Integer, String, Date, ForeignKey, Table, MetaData
-from sqlalchemy.orm import relationship, declarative_base
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Date
+from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy.orm import relationship
+from sqlalchemy.orm import declarative_base
 
-# Определение переменной Base перед использованием
 Base = declarative_base()
 
-DATABASE_URL = "sqlite:///F:/Projects/Python_projects/Alex/HW7_PW18/uni_hw7.db"
-engine = create_engine(DATABASE_URL)
-
-# Создание таблиц в базе данных
-Base.metadata.create_all(engine)
-
-
-class Group(Base):
-    __tablename__ = "groups"
-
-    group_id = Column(Integer, primary_key=True, autoincrement=True)
-    name_group = Column(String, nullable=False)
-    fach = Column(Integer, nullable=False)
-    subject = Column(String, nullable=False)
-
-    students = relationship("Student", back_populates="group")
+# Замените 'sqlite:///F:/Projects/Python_projects/Alex/HW7_PW18/uni_hw7.db' на ваше соединение с базой данных
+engine = create_engine("sqlite:///F:/Projects/Python_projects/Alex/HW7_PW18/uni_hw7.db")
 
 
 class Student(Base):
-    __tablename__ = "students"
+    __tablename__ = "student"
 
-    student_id = Column(Integer, primary_key=True, autoincrement=True)
-    name = Column(String, nullable=False)
-    age = Column(Integer, nullable=False)
-    group_id = Column(Integer, ForeignKey("groups.group_id"), nullable=False)
+    student_id = Column(Integer, primary_key=True)
+    name = Column(String(50))
+    age = Column(Integer)
+    group_id = Column(Integer, ForeignKey("groupps.group_id"))
 
     group = relationship("Group", back_populates="students")
+
+
+class Group(Base):
+    __tablename__ = "groupps"
+
+    group_id = Column(Integer, primary_key=True)
+    name_group = Column(String(255))
+    fach = Column(Integer)
+    subject = Column(String(50))
+
+    students = relationship("Student", back_populates="group")
 
 
 class Professor(Base):
@@ -40,29 +38,18 @@ class Professor(Base):
     professor_id = Column(Integer, primary_key=True)
     name = Column(String(20))
     degree = Column(String(50))
-    subjects = relationship("Subject", secondary="professor_subject")
-
-
-class Subject(Base):
-    __tablename__ = "subject"
-
-    subject_id = Column(Integer, primary_key=True)
-    name = Column(String(50))
-    professors = relationship("Professor", secondary="professor_subject")
-
-
-metadata = MetaData()
 
 
 class ProfessorSubject(Base):
     __tablename__ = "professor_subject"
+
     professor_id = Column(
         Integer, ForeignKey("professor.professor_id"), primary_key=True
     )
-    subject_id = Column(Integer, ForeignKey("subject.subject_id"), primary_key=True)
+    subject_id = Column(Integer, ForeignKey("groupps.group_id"), primary_key=True)
 
-    professor = relationship("Professor", back_populates="subjects")
-    subject = relationship("Subject", back_populates="professors")
+    professor = relationship("Professor")
+    subject = relationship("Group")
 
 
 class Grade(Base):
@@ -73,4 +60,6 @@ class Grade(Base):
     fach = Column(Integer)
     student = Column(String(20))
     data = Column(Date)
-    subject_id = Column(Integer, ForeignKey("subject.subject_id"))
+    subject_id = Column(Integer, ForeignKey("groupps.group_id"))
+
+    subject = relationship("Group")
