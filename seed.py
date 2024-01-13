@@ -1,7 +1,7 @@
 import sys
 from pathlib import Path
 
-# Добавьте путь к родительской директории вашего проекта
+# Добавьте путь к каталогу вашего проекта
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 # Затем добавьте импорты классов из модуля models
@@ -9,7 +9,6 @@ from models import Student, Group, Professor, Subject, ProfessorSubject, Grade
 
 from sqlalchemy.orm import Session
 from faker import Faker
-from models import Student, Group, Professor, Subject, ProfessorSubject, Grade
 from sqlalchemy import create_engine
 import random
 from datetime import datetime, timedelta
@@ -25,7 +24,7 @@ session = Session(engine)
 
 
 # Создание функций для генерации данных
-def create_students(num_students):
+def create_students(num_students, groups):
     students = []
     for _ in range(num_students):
         student = Student(
@@ -102,7 +101,7 @@ def create_grades(students, subjects):
 
 # Создание данных
 groups = create_groups()
-students = create_students(40)
+students = create_students(40, groups)
 professors = create_professors(5)
 subjects = create_subjects()
 
