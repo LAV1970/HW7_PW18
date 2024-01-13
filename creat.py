@@ -10,17 +10,6 @@ Base = declarative_base()
 engine = create_engine("sqlite:///F:/Projects/Python_projects/Alex/HW7_PW18/uni_hw7.db")
 
 
-class Student(Base):
-    __tablename__ = "student"
-
-    student_id = Column(Integer, primary_key=True)
-    name = Column(String(50))
-    age = Column(Integer)
-    group_id = Column(Integer, ForeignKey("groupps.group_id"))
-
-    group = relationship("Group", back_populates="students")
-
-
 class Group(Base):
     __tablename__ = "groupps"
 
@@ -30,6 +19,17 @@ class Group(Base):
     subject = Column(String(50))
 
     students = relationship("Student", back_populates="group")
+
+
+class Student(Base):
+    __tablename__ = "student"
+
+    student_id = Column(Integer, primary_key=True)
+    name = Column(String(50))
+    age = Column(Integer)
+    group_id = Column(Integer, ForeignKey("groupps.group_id"))
+
+    group = relationship("Group", back_populates="students")
 
 
 class Professor(Base):
