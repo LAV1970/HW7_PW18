@@ -1,8 +1,9 @@
+from models.group7 import Group
+from models.student7 import Student
+from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker
 from faker import Faker
 import random
-from models import Group, Student
 
 engine = create_engine("sqlite:///F:/Projects/Python_projects/Alex/HW7_PW18/uni_hw7.db")
 

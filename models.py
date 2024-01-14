@@ -58,3 +58,8 @@ class Grade(Base):
     subject_id = Column(Integer, ForeignKey("groupps.group_id"))
 
     subject = relationship("Group")
+
+
+# Создание движка и таблиц в базе данных
+engine = create_engine("sqlite:///F:/Projects/Python_projects/Alex/HW7_PW18/uni_hw7.db")
+Base.metadata.create_all(engine)
