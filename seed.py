@@ -2,8 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, relationship
 from faker import Faker
 import random
-from models import Student, Group
-from datetime import date
+from models import Group, Student
 
 engine = create_engine("sqlite:///F:/Projects/Python_projects/Alex/HW7_PW18/uni_hw7.db")
 
