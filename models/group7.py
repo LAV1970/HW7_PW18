@@ -1,16 +1,12 @@
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
-from sqlalchemy.ext.declarative import declarative_base
-
-Base = declarative_base()
+from . import Base
 
 
 class Group(Base):
-    __tablename__ = "groupps"
+    __tablename__ = "groups"
 
     group_id = Column(Integer, primary_key=True)
-    name_group = Column(String(255))
-    fach = Column(Integer)
-    subject = Column(String(50))
+    g_name = Column(String(255))  # Изменил имя атрибута
 
     students = relationship("Student", back_populates="group")

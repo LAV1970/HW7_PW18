@@ -1,29 +1,26 @@
-from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Date
-from sqlalchemy.orm import sessionmaker, relationship
+from sqlalchemy import Column, Integer, String, ForeignKey, Date  # Импорт типа Date
+from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
+from sqlalchemy import create_engine, Column, Integer, String, ForeignKey, Date
 
 Base = declarative_base()
 
 
 class Group(Base):
-    __tablename__ = "groupps"
+    __tablename__ = "groups"
 
     group_id = Column(Integer, primary_key=True)
-    name_group = Column(String(255))
-    fach = Column(Integer)
-    subject = Column(String(50))
+    g_name = Column(String(255))  # Изменил имя атрибута
 
     students = relationship("Student", back_populates="group")
 
 
 class Student(Base):
-    __tablename__ = "student"
+    __tablename__ = "students"
 
-    student_id = Column(Integer, primary_key=True)
-    name = Column(String(50))
-    age = Column(Integer)
-    group_id = Column(Integer, ForeignKey("groupps.group_id"))
-
+    id_stud = Column(Integer, primary_key=True, autoincrement=True)
+    name_stud = Column(String)
+    group_name = Column(String, ForeignKey("groups.g_name"))
     group = relationship("Group", back_populates="students")
 
 
@@ -41,7 +38,9 @@ class ProfessorSubject(Base):
     professor_id = Column(
         Integer, ForeignKey("professor.professor_id"), primary_key=True
     )
-    subject_id = Column(Integer, ForeignKey("groupps.group_id"), primary_key=True)
+    subject_id = Column(
+        Integer, ForeignKey("groups.g_name"), primary_key=True
+    )  # Предполагается, что связь с группами
 
     professor = relationship("Professor")
     subject = relationship("Group")
@@ -54,8 +53,10 @@ class Grade(Base):
     grade_name = Column(Integer)
     fach = Column(Integer)
     student = Column(String(20))
-    data = Column(Date)
-    subject_id = Column(Integer, ForeignKey("groupps.group_id"))
+    data = Column(Date)  # Добавлено отсутствовавшее поле
+    subject_id = Column(
+        Integer, ForeignKey("groups.g_name")
+    )  # Предполагается, что связь с группами
 
     subject = relationship("Group")
 

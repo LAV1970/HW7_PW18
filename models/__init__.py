@@ -3,15 +3,15 @@ from sqlalchemy.ext.declarative import declarative_base
 # Создание declarative_base
 Base = declarative_base()
 
-# Создание сессии
-from sqlalchemy.orm import scoped_session, sessionmaker
-
-DBSession = scoped_session(sessionmaker())
-
 
 # Импорт всех модулей с помощью config.scan()
 def includeme(config):
     config.scan(".models")
+
+
+# Теперь перенесем импорты моделей вниз, после определения Base
+from .group7 import Group
+from .student7 import Student
 
 
 # from .student7 import Student
