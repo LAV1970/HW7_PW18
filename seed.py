@@ -20,8 +20,11 @@ def add_random_student_to_db():
     age = random.randint(18, 25)
     group_id = random.randint(1, 10)
 
+    # Получаем случайную группу
+    group = session.query(Group).filter_by(group_id=group_id).first()
+
     # Создаем объект Student
-    student = Student(name=name, age=age, group_id=group_id)
+    student = Student(name=name, age=age, group=group)
 
     # Добавляем студента в сессию
     session.add(student)

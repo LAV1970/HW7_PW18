@@ -13,4 +13,4 @@ class Student(Base):
     age = Column(Integer)
     group_id = Column(Integer, ForeignKey("groupps.group_id"))
 
-    group = relationship("Group", back_populates="students")
+    group = relationship("Group", back_populates="students", uselist=False)

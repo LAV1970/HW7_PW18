@@ -13,7 +13,7 @@ class Group(Base):
     fach = Column(Integer)
     subject = Column(String(50))
 
-    students = relationship("Student", back_populates="group", uselist=True)
+    students = relationship("Student", back_populates="group")
 
 
 class Student(Base):
@@ -58,7 +58,3 @@ class Grade(Base):
     subject_id = Column(Integer, ForeignKey("groupps.group_id"))
 
     subject = relationship("Group")
-
-
-engine = create_engine("sqlite:///F:/Projects/Python_projects/Alex/HW7_PW18/uni_hw7.db")
-Base.metadata.create_all(engine)
