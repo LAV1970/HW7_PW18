@@ -1,21 +1,17 @@
+from faker import Faker
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models import Group  # Import your models
-from models import Professor
-from sqlalchemy.orm import declarative_base
+from models import Group, Professor  # Импортируем необходимые модели
+from sqlalchemy.ext.declarative import declarative_base
 
 Base = declarative_base()
+
+# Создание движка и таблиц в базе данных
 engine = create_engine("sqlite:///F:/Projects/Python_projects/Alex/HW7_PW18/uni_hw7.db")
 Base.metadata.create_all(engine)
 
-# ... (other model definitions)
-
-# Your group creation code
-from sqlalchemy.orm import sessionmaker
-from faker import Faker
-import random
-
-# Create a session
+# Создание сессии
 Session = sessionmaker(bind=engine)
 session = Session()
 
@@ -43,9 +39,6 @@ session.close()
 # Create a session
 Session = sessionmaker(bind=engine)
 session = Session()
-
-# Create a Faker object
-fake = Faker()
 
 
 # Function to add a professor to the database

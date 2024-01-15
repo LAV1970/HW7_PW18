@@ -1,6 +1,6 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, ForeignKey, Date
+from .base import Base  # Изменили эту строку
 from sqlalchemy.orm import relationship
-from . import Base
 
 
 class Group(Base):
