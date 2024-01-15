@@ -1,18 +1,20 @@
-import sqlite3
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy import create_engine
+from models import Group  # Подставьте правильный путь к вашим моделям
 
-# Подключение к базе данных
-connection = sqlite3.connect("F:/Projects/Python_projects/Alex/HW7_PW18/uni_hw7.db")
-cursor = connection.cursor()
+engine = create_engine("sqlite:///F:/Projects/Python_projects/Alex/HW7_PW18/uni_hw7.db")
+Session = sessionmaker(bind=engine)
+session = Session()
 
-# Выполнение SQL-запроса для просмотра данных в таблице student
-cursor.execute("SELECT * FROM student")
+# Проверьте, что сессия создана успешно
+if session:
+    print("Session created successfully.")
 
-# Получение результатов запроса
-rows = cursor.fetchall()
+# Ваш код добавления групп
+# ...
 
-# Вывод результатов
-for row in rows:
-    print(row)
+# Commit изменений
+session.commit()
 
-# Закрытие соединения
-connection.close()
+# Закрытие сессии
+session.close()

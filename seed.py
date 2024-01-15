@@ -1,48 +1,40 @@
-from models.group7 import Group
-from models.student7 import Student
-from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy import create_engine
+from sqlalchemy.orm import sessionmaker
+from models import Group  # Import your models
+from sqlalchemy.orm import declarative_base
+
+Base = declarative_base()
+engine = create_engine("sqlite:///F:/Projects/Python_projects/Alex/HW7_PW18/uni_hw7.db")
+Base.metadata.create_all(engine)
+
+# ... (other model definitions)
+
+# Your group creation code
+from sqlalchemy.orm import sessionmaker
 from faker import Faker
 import random
-from models import Base  # Импортируем Base из models
 
-engine = create_engine("sqlite:///F:/Projects/Python_projects/Alex/HW7_PW18/uni_hw7.db")
-
-# Создаем сессию
+# Create a session
 Session = sessionmaker(bind=engine)
 session = Session()
 
-# Создание объекта Faker
+# Create a Faker object
 fake = Faker()
 
 
-# Функция для добавления случайного студента с использованием SQLAlchemy
-def add_random_student_to_db():
-    name = fake.name()
-    age_stud = random.randint(18, 25)
-    group_id = random.randint(1, 10)
-
-    # Получаем случайную группу
-    group = session.query(Group).filter_by(group_id=group_id).first()
-
-    # Создаем объект Student
-    student = Student(
-        name_stud=name, age_stud=age_stud, group=group
-    )  # Изменим атрибут age на age_stud
-
-    # Добавляем студента в сессию
-    session.add(student)
+# Function to add a group to the database
+def add_group(name):
+    group = Group(g_name=name)
+    session.add(group)
 
 
-# Вынесем создание таблиц в базе данных за пределы цикла
-Base.metadata.create_all(engine)
+# Add three groups
+group_names = ["Group A", "Group B", "Group C"]
+for name in group_names:
+    add_group(name)
 
-# Добавление 40 случайных студентов в базу данных
-for _ in range(40):
-    add_random_student_to_db()
-
-# Сохраняем изменения в базе данных
+# Commit changes to the database
 session.commit()
 
-# Закрываем сессию
+# Close the session
 session.close()
