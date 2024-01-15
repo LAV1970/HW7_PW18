@@ -4,7 +4,7 @@ def includeme(config):
 
 
 # Теперь перенесем импорты моделей вниз, после определения Base
-from .base import Base
+from .database.base import Base
 from .group7 import Group
 from .student7 import Student
 from .professor7 import Professor
