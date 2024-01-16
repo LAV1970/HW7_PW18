@@ -14,6 +14,8 @@ class Group(Base):
 
     students = relationship("Student", back_populates="group")
 
+    professors = relationship("ProfessorSubject", back_populates="subject")
+
 
 class Student(Base):
     __tablename__ = "students"
@@ -31,6 +33,8 @@ class Professor(Base):
     name = Column(String(20))
     degree = Column(String(50))
 
+    subjects = relationship("ProfessorSubject", back_populates="professor")
+
 
 class ProfessorSubject(Base):
     __tablename__ = "professor_subject"
@@ -38,12 +42,10 @@ class ProfessorSubject(Base):
     professor_id = Column(
         Integer, ForeignKey("professor.professor_id"), primary_key=True
     )
-    subject_id = Column(
-        Integer, ForeignKey("groups.g_name"), primary_key=True
-    )  # Предполагается, что связь с группами
+    subject_id = Column(Integer, ForeignKey("groups.group_id"), primary_key=True)
 
-    professor = relationship("Professor")
-    subject = relationship("Group")
+    professor = relationship("Professor", back_populates="subjects")
+    subject = relationship("Group", back_populates="professors")
 
 
 class Grade(Base):

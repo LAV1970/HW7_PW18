@@ -10,3 +10,5 @@ class Group(Base):
     g_name = Column(String(255))
 
     students = relationship("Student", back_populates="group")
+
+    professors = relationship("ProfessorSubject", back_populates="subject")

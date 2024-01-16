@@ -1,8 +1,7 @@
 from faker import Faker
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models import Group, Professor  # Импортируем необходимые модели
+from models import Group, Professor, ProfessorSubject, Grade, Student
 
 # from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import declarative_base
@@ -35,13 +34,6 @@ for name in group_names:
 # Commit changes to the database
 session.commit()
 
-# Close the session
-session.close()
-
-# Create a session
-Session = sessionmaker(bind=engine)
-session = Session()
-
 
 # Function to add a professor to the database
 def add_professor(name, degree):
@@ -58,5 +50,62 @@ for _ in range(5):
 # Commit changes to the database
 session.commit()
 
+# Подгрузим профессоров в сессию перед созданием предметов
+professors = session.query(Professor).all()
+
 # Close the session
+session.close()
+
+# Создание сессии
+Session = sessionmaker(bind=engine)
+session = Session()
+
+# Добавление предметов
+subject_names = [
+    "Math",
+    "Physics",
+    "Chemistry",
+    "Biology",
+    "History",
+    "English",
+    "Computer Science",
+    "Art",
+]
+
+# Подгрузим профессоров и группы в сессию
+professors = session.query(Professor).all()
+groups = session.query(Group).all()
+
+for name in subject_names:
+    # Выберем случайного профессора и группу
+    random_professor = fake.random_element(elements=professors)
+    random_group = fake.random_element(elements=groups)
+
+    subject = ProfessorSubject(
+        name=name, professor=random_professor, group=random_group
+    )
+    session.add(subject)
+
+    session.commit()
+
+    # Закрытие сессии
+    session.close()
+
+    # Создание сессии
+    Session = sessionmaker(bind=engine)
+    session = Session()
+
+# Добавление оценок
+students = session.query(Student).all()
+subjects = session.query(ProfessorSubject).all()
+
+for student in students:
+    for subject in subjects:
+        value = fake.random_element(elements=(2, 3, 4, 5))
+        grade = Grade(value=value, student=student.name_stud, subject=subject.name)
+        session.add(grade)
+
+session.commit()
+
+# Закрытие сессии
 session.close()
