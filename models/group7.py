@@ -1,6 +1,6 @@
-from sqlalchemy import Column, Integer, String, ForeignKey
+from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship
-from .database.base import Base  # Импорт Base из правильного места
+from .database.base import Base
 
 
 class Group(Base):
@@ -10,7 +10,3 @@ class Group(Base):
     g_name = Column(String(255))
 
     students = relationship("Student", back_populates="group")
-
-
-# Переместите этот импорт в самый конец файла
-from .student7 import Student
