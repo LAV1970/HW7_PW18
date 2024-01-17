@@ -2,6 +2,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Date
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
+from sqlalchemy.types import Date  # Add this import for the Date type
 
 Base = declarative_base()
 
@@ -13,6 +14,9 @@ class Group(Base):
     g_name = Column(String, nullable=False)
 
     professors = relationship("Professor", back_populates="group")
+    students = relationship(
+        "Student", back_populates="group"
+    )  # Added back_populates for students
 
 
 class Professor(Base):
@@ -45,6 +49,7 @@ class Student(Base):
     id_stud = Column(Integer, primary_key=True, autoincrement=True)
     name_stud = Column(String)  # Изменено имя атрибута
     group_name = Column(String, ForeignKey("groups.g_name"))
+    group_id = Column(Integer, ForeignKey("groups.group_id"))  # Added group_id
     group = relationship("Group", back_populates="students")
 
 
@@ -57,7 +62,7 @@ class Grade(Base):
     student = Column(String(20))
     data = Column(Date)  # Добавлено отсутствовавшее поле
     subject_id = Column(
-        Integer, ForeignKey("groups.g_name")
+        Integer, ForeignKey("groups.group_id")
     )  # Предполагается, что связь с группами
 
     subject = relationship("Group")
