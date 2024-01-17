@@ -12,7 +12,7 @@ class Grade(Base):
     grade_name = Column(Integer)
     fach = Column(Integer)
     student = Column(String(20))
-    data = Column(Date)  # Добавлено отсутствовавшее поле
-    subject_id = Column(
-        Integer, ForeignKey("groups.group_id")
-    )  # Предполагается, что связь с группами
+    data = Column(Date)
+    subject_id = Column(Integer, ForeignKey("groups.g_name"))
+
+    subject = relationship("Group")

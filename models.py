@@ -2,21 +2,8 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Date
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import create_engine
-from sqlalchemy.types import Date  # Add this import for the Date type
 
 Base = declarative_base()
-
-
-class Group(Base):
-    __tablename__ = "groups"
-
-    group_id = Column(Integer, primary_key=True, autoincrement=True)
-    g_name = Column(String, nullable=False)
-
-    professors = relationship("Professor", back_populates="group")
-    students = relationship(
-        "Student", back_populates="group"
-    )  # Added back_populates for students
 
 
 class Professor(Base):
@@ -29,6 +16,15 @@ class Professor(Base):
     subjects = relationship("ProfessorSubject", back_populates="professor")
     group_id = Column(Integer, ForeignKey("groups.group_id"))
     group = relationship("Group", back_populates="professors")
+
+
+class Group(Base):
+    __tablename__ = "groups"
+
+    group_id = Column(Integer, primary_key=True, autoincrement=True)
+    g_name = Column(String, nullable=False)
+
+    professors = relationship("Professor", back_populates="group")
 
 
 class ProfessorSubject(Base):
@@ -47,9 +43,8 @@ class Student(Base):
     __tablename__ = "students"
 
     id_stud = Column(Integer, primary_key=True, autoincrement=True)
-    name_stud = Column(String)  # Изменено имя атрибута
+    name_stud = Column(String)
     group_name = Column(String, ForeignKey("groups.g_name"))
-    group_id = Column(Integer, ForeignKey("groups.group_id"))  # Added group_id
     group = relationship("Group", back_populates="students")
 
 
@@ -60,10 +55,8 @@ class Grade(Base):
     grade_name = Column(Integer)
     fach = Column(Integer)
     student = Column(String(20))
-    data = Column(Date)  # Добавлено отсутствовавшее поле
-    subject_id = Column(
-        Integer, ForeignKey("groups.group_id")
-    )  # Предполагается, что связь с группами
+    data = Column(Date)
+    subject_id = Column(Integer, ForeignKey("groups.g_name"))
 
     subject = relationship("Group")
 

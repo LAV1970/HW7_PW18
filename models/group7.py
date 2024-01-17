@@ -1,6 +1,8 @@
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, ForeignKey
 from sqlalchemy.orm import relationship
-from .database.base import Base
+from sqlalchemy.ext.declarative import declarative_base
+
+Base = declarative_base()
 
 
 class Group(Base):
@@ -10,6 +12,4 @@ class Group(Base):
     g_name = Column(String, nullable=False)
 
     professors = relationship("Professor", back_populates="group")
-    students = relationship(
-        "Student", back_populates="group"
-    )  # Added back_populates for students
+    # Added back_populates for students
