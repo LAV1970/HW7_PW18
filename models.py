@@ -9,31 +9,22 @@ Base = declarative_base()
 class Group(Base):
     __tablename__ = "groups"
 
-    group_id = Column(Integer, primary_key=True)
-    g_name = Column(String(255))  # Изменил имя атрибута
+    group_id = Column(Integer, primary_key=True, autoincrement=True)
+    g_name = Column(String, nullable=False)
 
-    students = relationship("Student", back_populates="group")
-
-    professors = relationship("ProfessorSubject", back_populates="subject")
-
-
-class Student(Base):
-    __tablename__ = "students"
-
-    id_stud = Column(Integer, primary_key=True, autoincrement=True)
-    name_stud = Column(String)  # Изменено имя атрибута
-    group_name = Column(String, ForeignKey("groups.g_name"))
-    group = relationship("Group", back_populates="students")
+    professors = relationship("Professor", back_populates="group")
 
 
 class Professor(Base):
     __tablename__ = "professor"
 
-    professor_id = Column(Integer, primary_key=True)
-    name = Column(String(20))
-    degree = Column(String(50))
+    professor_id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String, nullable=False)
+    degree = Column(String)
 
     subjects = relationship("ProfessorSubject", back_populates="professor")
+    group_id = Column(Integer, ForeignKey("groups.group_id"))
+    group = relationship("Group", back_populates="professors")
 
 
 class ProfessorSubject(Base):
@@ -46,6 +37,15 @@ class ProfessorSubject(Base):
 
     professor = relationship("Professor", back_populates="subjects")
     subject = relationship("Group", back_populates="professors")
+
+
+class Student(Base):
+    __tablename__ = "students"
+
+    id_stud = Column(Integer, primary_key=True, autoincrement=True)
+    name_stud = Column(String)  # Изменено имя атрибута
+    group_name = Column(String, ForeignKey("groups.g_name"))
+    group = relationship("Group", back_populates="students")
 
 
 class Grade(Base):

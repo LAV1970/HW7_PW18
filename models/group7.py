@@ -6,9 +6,7 @@ from .database.base import Base
 class Group(Base):
     __tablename__ = "groups"
 
-    group_id = Column(Integer, primary_key=True)
-    g_name = Column(String(255))
+    group_id = Column(Integer, primary_key=True, autoincrement=True)
+    g_name = Column(String, nullable=False)
 
-    students = relationship("Student", back_populates="group")
-
-    professors = relationship("ProfessorSubject", back_populates="subject")
+    professors = relationship("Professor", back_populates="group")

@@ -1,7 +1,6 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Date
-from sqlalchemy.orm import relationship
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.orm import relationship  # Add this line
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import create_engine
 
 Base = declarative_base()
 
@@ -9,8 +8,10 @@ Base = declarative_base()
 class Professor(Base):
     __tablename__ = "professor"
 
-    professor_id = Column(Integer, primary_key=True)
-    name = Column(String(20))
-    degree = Column(String(50))
+    professor_id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String, nullable=False)
+    degree = Column(String)
 
     subjects = relationship("ProfessorSubject", back_populates="professor")
+    group_id = Column(Integer, ForeignKey("groups.group_id"))
+    group = relationship("Group", back_populates="professors")
