@@ -1,27 +1,52 @@
 from faker import Faker
 import random
-from sqlalchemy import create_engine, Column, Integer, ForeignKey
+from sqlalchemy import create_engine, Column, Integer, ForeignKey, String, Date
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship
-from models import Group, Professor, ProfessorSubject, Grade, Student
 
 Base = declarative_base()
+fake = Faker()
+
+
+class Group(Base):
+    __tablename__ = "groups"
+
+    group_id = Column(Integer, primary_key=True, autoincrement=True)
+    g_name = Column(String, nullable=False)
 
 
 class ProfessorSubject(Base):
     __tablename__ = "professor_subject"
 
-    professor_id = Column(
-        Integer, ForeignKey("professor.professor_id"), primary_key=True
-    )
-    subject_id = Column(Integer, ForeignKey("groups.group_id"), primary_key=True)
-
-    professor = relationship("Professor", back_populates="subjects")
-    subject = relationship("Group", back_populates="professors")
-
-    # Create a Faker object
+    professor_subject_id = Column(Integer, primary_key=True, autoincrement=True)
+    professor_id = Column(Integer, ForeignKey("professor.professor_id"))
+    subject_id = Column(Integer, ForeignKey("groups.group_id"))
 
 
-fake = Faker()
+class Professor(Base):
+    __tablename__ = "professor"
+
+    professor_id = Column(Integer, primary_key=True, autoincrement=True)
+    name = Column(String, nullable=False)
+    degree = Column(String)
+
+
+class Student(Base):
+    __tablename__ = "students"
+
+    id_stud = Column(Integer, primary_key=True, autoincrement=True)
+    name_stud = Column(String)
+    group_id = Column(Integer, ForeignKey("groups.group_id"))
+
+
+class Grade(Base):
+    __tablename__ = "grade"
+
+    grade_id = Column(Integer, primary_key=True, autoincrement=True)
+    grade_name = Column(Integer)
+    fach = Column(Integer)
+    student_id = Column(Integer, ForeignKey("students.id_stud"))
+    subject_id = Column(Integer, ForeignKey("groups.group_id"))
+    data = Column(Date)
 
 
 # Создание движка и таблиц в базе данных
@@ -32,38 +57,19 @@ Base.metadata.create_all(engine)
 Session = sessionmaker(bind=engine)
 session = Session()
 
-
-# Создание групп
-def add_group(name):
+# Добавление групп
+group_names = ["Group A", "Group B", "Group C"]
+for name in group_names:
     group = Group(g_name=name)
     session.add(group)
 
-
-group_names = ["Group A", "Group B", "Group C"]
-for name in group_names:
-    add_group(name)
-
-# Commit изменений в базу данных
-session.commit()
-
-
-# Функция для добавления профессора в базу данных
-def add_professor(name, degree):
-    professor = Professor(name=name, degree=degree)
-    session.add(professor)
-
-
-# Добавление пяти профессоров
-for _ in range(5):
-    name = fake.name()
-    degree = fake.random_element(elements=("Ph.D.", "M.Sc.", "D.Sc."))
-    add_professor(name, degree)
+# Добавление студентов
+for _ in range(10):
+    student = Student(name_stud=fake.name(), group_id=random.choice(group_names))
+    session.add(student)
 
 # Commit изменений в базу данных
 session.commit()
-
-# Подгрузим профессоров в сессию перед созданием предметов
-professors = session.query(Professor).all()
 
 # Закрытие сессии
 session.close()
@@ -72,8 +78,19 @@ session.close()
 Session = sessionmaker(bind=engine)
 session = Session()
 
+# Добавление профессоров
+for _ in range(5):
+    professor = Professor(
+        name=fake.name(),
+        degree=fake.random_element(elements=("Ph.D.", "M.Sc.", "D.Sc.")),
+    )
+    session.add(professor)
+
+# Commit изменений в базу данных
+session.commit()
+
 # Добавление предметов
-subject_names = [
+for name in [
     "Math",
     "Physics",
     "Chemistry",
@@ -82,17 +99,12 @@ subject_names = [
     "English",
     "Computer Science",
     "Art",
-]
-
-for name in subject_names:
-    random_professor = random.choice(professors)
-    random_group = random.choice(session.query(Group).all())
-
-    subject = ProfessorSubject(
-        name=name, professor=random_professor, group=random_group
+]:
+    professor_subject = ProfessorSubject(
+        professor_id=random.choice(session.query(Professor).all()),
+        subject_id=random.choice(session.query(Group).all()),
     )
-
-    session.add(subject)
+    session.add(professor_subject)
 
 # Commit изменений в базу данных
 session.commit()
@@ -105,14 +117,15 @@ Session = sessionmaker(bind=engine)
 session = Session()
 
 # Добавление оценок
-students = session.query(Student).all()
-subjects = session.query(ProfessorSubject).all()
-
-for student in students:
-    for subject in subjects:
-        value = fake.random_element(elements=(2, 3, 4, 5))
-        grade = Grade(value=value, student=student.name_stud, subject=subject.name)
-        session.add(grade)
+for _ in range(10):
+    grade = Grade(
+        grade_name=fake.random_element(elements=(2, 3, 4, 5)),
+        fach=fake.random_element(elements=(1, 2, 3, 4)),
+        student_id=random.choice(session.query(Student).all()),
+        subject_id=random.choice(session.query(Group).all()),
+        data=fake.date_of_birth(),
+    )
+    session.add(grade)
 
 # Commit изменений в базу данных
 session.commit()
