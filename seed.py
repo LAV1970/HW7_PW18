@@ -6,10 +6,7 @@ from alembic import command
 from alembic.config import Config
 
 # Инициализация Alembic
-alembic_cfg = Config(
-    "F:\Projects\Python_projects\Alex\HW7_PW18\alembic"
-)  # замените на фактический путь к вашему файлу alembic.ini
-alembic_cfg.set_main_option("script_location", "alembic")
+alembic_cfg = Config("F:/Projects/Python_projects/Alex/HW7_PW18/alembic.ini")
 
 # Создание миграции
 command.revision(alembic_cfg, autogenerate=True, message="Add group_id to students")
@@ -75,7 +72,10 @@ for name in group_names:
 
 # Добавление студентов
 for _ in range(10):
-    student = Student(name_stud=fake.name(), group_id=random.choice(group_names))
+    student = Student(
+        name_stud=fake.name(),
+        group_id=random.choice(session.query(Group.group_id).all()),
+    )
     session.add(student)
 
 # Commit изменений в базу данных
@@ -111,8 +111,8 @@ for name in [
     "Art",
 ]:
     professor_subject = ProfessorSubject(
-        professor_id=random.choice(session.query(Professor).all()),
-        subject_id=random.choice(session.query(Group).all()),
+        professor_id=random.choice(session.query(Professor.professor_id).all()),
+        subject_id=random.choice(session.query(Group.group_id).all()),
     )
     session.add(professor_subject)
 
