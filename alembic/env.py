@@ -1,14 +1,13 @@
-from logging.config import fileConfig
-from sqlalchemy import engine_from_config, pool
 from alembic import context
+from sqlalchemy import engine_from_config, pool
+from logging.config import fileConfig
 import os
 import sys
 
-# Add the directory containing your myapp package to the Python path
+# Add the directory containing your models package to the Python path
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
 from models import Base
-
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -38,7 +37,13 @@ def run_migrations_offline() -> None:
         literal_binds=True,
         dialect_opts={"paramstyle": "named"},
     )
-
+    # Load the models and sort them based on foreign key dependencies
+    models = [Base.metadata.tables[name] for name in Base.metadata.tables.keys()]
+    models.sort(
+        key=lambda table: [
+            fk.columns[0].table.name for fk in table.foreign_key_constraints
+        ]
+    )
     with context.begin_transaction():
         context.run_migrations()
 
@@ -53,6 +58,14 @@ def run_migrations_online() -> None:
 
     with connectable.connect() as connection:
         context.configure(connection=connection, target_metadata=target_metadata)
+
+        # Load the models and sort them based on foreign key dependencies
+        models = [Base.metadata.tables[name] for name in Base.metadata.tables.keys()]
+        models.sort(
+            key=lambda table: [
+                fk.columns[0].table.name for fk in table.foreign_key_constraints
+            ]
+        )
 
         with context.begin_transaction():
             context.run_migrations()

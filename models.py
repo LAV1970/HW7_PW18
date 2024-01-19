@@ -13,9 +13,10 @@ class Professor(Base):
     name = Column(String, nullable=False)
     degree = Column(String)
 
-    subjects = relationship("ProfessorSubject", back_populates="professor")
     group_id = Column(Integer, ForeignKey("groups.group_id"))
     group = relationship("Group", back_populates="professors")
+
+    subjects = relationship("ProfessorSubject", back_populates="professor")
 
 
 class Group(Base):
@@ -25,6 +26,7 @@ class Group(Base):
     g_name = Column(String, nullable=False)
 
     professors = relationship("Professor", back_populates="group")
+    students = relationship("Student", back_populates="group")
 
 
 class ProfessorSubject(Base):
@@ -36,7 +38,7 @@ class ProfessorSubject(Base):
     subject_id = Column(Integer, ForeignKey("groups.group_id"), primary_key=True)
 
     professor = relationship("Professor", back_populates="subjects")
-    subject = relationship("Group", back_populates="professors")
+    subject = relationship("Group")
 
 
 class Student(Base):
@@ -45,6 +47,7 @@ class Student(Base):
     id_stud = Column(Integer, primary_key=True, autoincrement=True)
     name_stud = Column(String)
     group_name = Column(String, ForeignKey("groups.g_name"))
+
     group = relationship("Group", back_populates="students")
 
 
@@ -56,8 +59,8 @@ class Grade(Base):
     fach = Column(Integer)
     student = Column(String(20))
     data = Column(Date)
-    subject_id = Column(Integer, ForeignKey("groups.g_name"))
 
+    subject_id = Column(Integer, ForeignKey("groups.group_id"))
     subject = relationship("Group")
 
 
