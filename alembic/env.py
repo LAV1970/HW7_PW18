@@ -7,7 +7,7 @@ import sys
 # Add the directory containing your myapp package to the Python path
 sys.path.append(os.path.join(os.path.dirname(__file__), ".."))
 
-from myapp.models import Base
+from models import Base
 
 
 # this is the Alembic Config object, which provides

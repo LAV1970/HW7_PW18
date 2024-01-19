@@ -2,7 +2,17 @@ from faker import Faker
 import random
 from sqlalchemy import create_engine, Column, Integer, ForeignKey, String, Date
 from sqlalchemy.orm import sessionmaker, declarative_base, relationship
+from alembic import command
+from alembic.config import Config
 
+# Инициализация Alembic
+alembic_cfg = Config(
+    "F:\Projects\Python_projects\Alex\HW7_PW18\alembic"
+)  # замените на фактический путь к вашему файлу alembic.ini
+alembic_cfg.set_main_option("script_location", "alembic")
+
+# Создание миграции
+command.revision(alembic_cfg, autogenerate=True, message="Add group_id to students")
 Base = declarative_base()
 fake = Faker()
 
