@@ -13,4 +13,4 @@ class Group(Base):
     g_name = Column(String, nullable=False)
 
     professors = relationship("Professor", back_populates="group")
-    # Added back_populates for students
+    students = relationship("Student", back_populates="group")

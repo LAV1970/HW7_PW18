@@ -46,9 +46,11 @@ class Student(Base):
 
     id_stud = Column(Integer, primary_key=True, autoincrement=True)
     name_stud = Column(String)
-    group_name = Column(String, ForeignKey("groups.g_name"))
+    group_id = Column(Integer, ForeignKey("groups.group_id"))  # Исправлено здесь
 
-    group = relationship("Group", back_populates="students")
+    group = relationship(
+        "Group", back_populates="students"
+    )  # Добавили обратное отношение
 
 
 class Grade(Base):
