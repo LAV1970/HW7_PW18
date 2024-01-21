@@ -54,8 +54,8 @@ def main():
     parser.add_argument(
         "--model",
         "-m",
-        choices=["student", "grade"],
-        help="Model to perform the operation on",
+        choices=["student", "grade", "Teacher"],
+        help="Specify the model for the operation",
     )
 
     args = parser.parse_args()
