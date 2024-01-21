@@ -1,7 +1,7 @@
 import argparse
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-from models import Student, Grade  # Импортируйте свои модели
+from models import Student, Grade, Professor, ProfessorSubject, Group
 
 
 def create_student(session, name, group_id):
@@ -62,7 +62,7 @@ def main():
 
     engine = create_engine(
         "sqlite:///F:/Projects/Python_projects/Alex/HW7_PW18/uni_hw7.db"
-    )  # Замените на свой путь к базе данных
+    )
     Session = sessionmaker(bind=engine)
     session = Session()
 
