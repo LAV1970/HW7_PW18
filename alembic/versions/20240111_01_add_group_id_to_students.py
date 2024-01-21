@@ -9,6 +9,9 @@ Create Date: 2024-01-11  # Укажите текущую дату
 from alembic import op
 import sqlalchemy as sa
 
+# Уникальный идентификатор для миграции
+revision_id = "20240111_01"
+
 
 # Изменения вперед (при обновлении)
 def upgrade():
