@@ -128,11 +128,14 @@ session = Session()
 
 # Добавление оценок
 for _ in range(10):
+    student = random.choice(session.query(Student).all())
+    group = student.group
+
     grade = Grade(
         grade_name=fake.random_element(elements=(2, 3, 4, 5)),
         fach=fake.random_element(elements=(1, 2, 3, 4)),
-        student_id=random.choice(session.query(Student).all()),
-        subject_id=random.choice(session.query(Group).all()),
+        student=student,
+        subject=group,
         data=fake.date_of_birth(),
     )
     session.add(grade)
