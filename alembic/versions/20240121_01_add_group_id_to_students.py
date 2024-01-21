@@ -7,7 +7,7 @@ Create Date: 2024-01-21  # Укажите текущую дату
 """
 # явное указание revision
 revision = "20240121_01"
-down_revision = "<20240111_01>"  # Укажите здесь предыдущий ID миграции, если есть
+down_revision = None  # Укажите здесь предыдущий ID миграции, если есть
 
 from alembic import op
 import sqlalchemy as sa
