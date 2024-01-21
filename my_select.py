@@ -1,6 +1,6 @@
 # my_select.py
 
-from sqlalchemy import create_engine, func
+from sqlalchemy import create_engine, func, and_
 from sqlalchemy.orm import sessionmaker
 from models import Student, Grade, Group, Professor, ProfessorSubject
 
@@ -154,6 +154,50 @@ def select_10(student_name, professor_name):
         .join(Student, Group.group_id == Student.group_id)
         .filter(Student.name_stud == student_name, Professor.name == professor_name)
         .distinct(Group.g_name, Professor.name, Grade.subject)
+        .all()
+    )
+    return result
+
+
+def select_add_1(professor_name, student_name):
+    result = (
+        session.query(
+            func.avg(Grade.grade_name).label("average_grade"),
+        )
+        .join(Student, Grade.student_id == Student.id_stud)
+        .join(Professor, Professor.professor_id == Grade.professor_id)
+        .filter(Professor.name == professor_name, Student.name_stud == student_name)
+        .scalar()
+    )
+    return result
+
+
+def select_add_2(group_name, subject_name):
+    subquery = (
+        session.query(
+            Grade.student_id,
+            func.max(Grade.data).label("max_date"),
+        )
+        .join(Student, Grade.student_id == Student.id_stud)
+        .join(Group, Student.group_id == Group.group_id)
+        .filter(Group.g_name == group_name, Grade.subject == subject_name)
+        .group_by(Grade.student_id)
+        .subquery()
+    )
+
+    result = (
+        session.query(
+            Student.name_stud,
+            Grade.grade_name,
+        )
+        .join(
+            subquery,
+            and_(
+                Student.id_stud == subquery.c.student_id,
+                Grade.data == subquery.c.max_date,
+            ),
+        )
+        .filter(Group.g_name == group_name, Grade.subject == subject_name)
         .all()
     )
     return result
